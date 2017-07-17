@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +32,7 @@ public class UserDAO{
 	}
 
 	public List<User> findAll() {
-		List resultList = em.createQuery("from User").getResultList();
-		return resultList;
+		return em.createQuery("select u from User u", User.class).getResultList();
 	}
 
 	public User findById(Serializable id) {
@@ -48,9 +46,9 @@ public class UserDAO{
 	}
 	
 	public User findByUserName(String userName){
-		Query q = em.createQuery("select u from User u where u.userName = :username", User.class);
-		q.setParameter("username", userName);
-		return (User) q.getSingleResult();
+		return em.createQuery("select distinct(u) from User u "
+				+ "join fetch u.roles role where u.userName = :userName", User.class)
+				.setParameter("userName", userName).getSingleResult();
 	}
 		
 }

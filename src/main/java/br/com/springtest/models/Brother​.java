@@ -2,14 +2,19 @@ package br.com.springtest.models;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity(name="Brother")
+@Table(name = "brother")
 public class Brother​ {
 	
 	@Id
@@ -17,17 +22,16 @@ public class Brother​ {
 	@Column(name = "brother_id")
 	private int id;
 
-	@Column(name = "name", unique = true)
+	@Column(name = "name")
 	private String name;
 	@Column(name = "email")
 	private String email;
-	@OneToOne
-	@Column(name = "user​_id")
-	private User user​;
-	@Column(name = "registration_date")
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="brother")
+	private User user;
+	@Column(name = "registration_date", nullable=true)
 	@DateTimeFormat
 	private Calendar registrationDate;
-	@Column(name = "last_update")
+	@Column(name = "last_update", nullable=true)
 	@DateTimeFormat
 	private Calendar lastUpdate;
 	
@@ -49,12 +53,6 @@ public class Brother​ {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public User getUser​() {
-		return user​;
-	}
-	public void setUser​(User user​) {
-		this.user​ = user​;
-	}
 	public Calendar getRegistrationDate() {
 		return registrationDate;
 	}
@@ -68,6 +66,12 @@ public class Brother​ {
 		this.lastUpdate = lastUpdate;
 	}
 
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	@Override
 	public String toString() {
 		return "Brother​ [id=" + id + ", name=" + name + ", email=" + email + ", registrationDate=" + registrationDate

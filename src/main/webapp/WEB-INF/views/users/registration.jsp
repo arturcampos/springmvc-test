@@ -29,6 +29,13 @@
 			<form:password path="password" />
 			<form:errors path="password" />
 		</div>
+		<div>
+			<label>Perfil</label>
+			<form:select path="roles[0]">
+				<form:option value="NONE" label="--- Select ---" />
+				<form:options items="${roles}" />
+			</form:select>
+		</div>
 		<button type="submit">Registrar</button>
 	</form:form>
 

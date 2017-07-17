@@ -10,12 +10,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.springtest.models.Brother​;
+import br.com.springtest.models.Role;
 import br.com.springtest.models.User;
+import br.com.springtest.services.BrotherService;
+import br.com.springtest.services.RoleService;
 import br.com.springtest.services.UserService;
 import br.com.springtest.validations.UserValidation;
 
@@ -24,7 +29,11 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private BrotherService brotherService;
+	@Autowired
+	private RoleService roleService;
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.addValidators(new UserValidation());
@@ -32,18 +41,22 @@ public class UserController {
 
 	@RequestMapping(value = "/users/registration", method = RequestMethod.GET)
 	public ModelAndView registration(User user) {
-		return new ModelAndView("users/registration");
+		
+		ModelAndView modelAndView = new ModelAndView("users/registration");
+		
+		
+		List<Brother​> brothers = brotherService.listBrothers();
+		List<Role> roles = roleService.listRoles();
+		
+		modelAndView.addObject("brothers", brothers);
+		modelAndView.addObject("roles", roles);
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/users/registration", method = RequestMethod.POST)
 	public ModelAndView save(@Valid User user, BindingResult result, RedirectAttributes redirectAttributes) {
 		ModelAndView modelAndView = new ModelAndView();
-		
-		/*User userExists = userService.findUserByUserName(user.getUserName());
-		if (userExists != null) {
-			result.rejectValue("userName", "error.user.userName");
-			modelAndView.setViewName("/users/registration");
-		}*/
+
 		if (result.hasErrors()) {
 			modelAndView = registration(user);
 		} else{
@@ -62,6 +75,15 @@ public class UserController {
 		List<User> users = userService.listUsers();
 		ModelAndView modelAndView = new ModelAndView("users/list");
 		modelAndView.addObject("users", users);
+
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/users/detail/{id}", method = RequestMethod.GET)
+	public ModelAndView detail(@PathVariable("id") Integer id) {
+		ModelAndView modelAndView = new ModelAndView("users/detail");
+		User user = userService.find(id);
+		modelAndView.addObject("user", user);
 
 		return modelAndView;
 	}

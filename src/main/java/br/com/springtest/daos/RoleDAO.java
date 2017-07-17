@@ -32,13 +32,12 @@ public class RoleDAO {
 	}
 
 	public List<Role> findAll() {
-		List resultList = em.createQuery("from Role").getResultList();
-		return resultList;
+		return em.createQuery("from Role", Role.class).getResultList();
 	}
 
 	public Role findById(Serializable id) {
-		Role obj = (Role) em.find(Role.class, id);
-		return obj;
+
+		return em.find(Role.class, id);
 	}
 
 	public void update(Role role) {

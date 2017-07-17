@@ -17,9 +17,6 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import br.com.springtest.models.Brother​;
-import br.com.springtest.models.Role;
-
 @Entity
 @Table(name = "user")
 public class User {
@@ -28,11 +25,11 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private int id;
-
 	@Column(name = "user_name", unique = true)
 	private String userName;
-	@OneToOne(mappedBy="user_id")
-	private Brother​ brother​;
+	@OneToOne
+	@JoinColumn(name="brother_id")
+	private Brother​ brother;
 	@Column(name = "password")
 	private String password;
 	@Column(name = "active")
@@ -64,11 +61,7 @@ public class User {
 	}
 
 	public Brother​ getBrother​() {
-		return brother​;
-	}
-
-	public void setName(Brother​ brother​) {
-		this.brother​ = brother​;
+		return brother;
 	}
 
 	public String getPassword() {
@@ -103,15 +96,6 @@ public class User {
 		this.lastUpdate = lastUpdate;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + ", brother=" + brother​ + ", password="
-				+ password + ", active=" + active + ", registrationDate=" + registrationDate + ", lastUpdate="
-				+ lastUpdate + ", roles=" + roles + "]";
-	}
-
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -119,5 +103,17 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	public void setBrother​(Brother​ brother​) {
+		this.brother = brother​;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", active=" + active
+				+ ", registrationDate=" + registrationDate + ", lastUpdate=" + lastUpdate + ", roles=" + roles + "]";
+	}
+	
+	
 
 }
